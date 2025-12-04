@@ -29,3 +29,7 @@ def calculate(data: InputData):
         wet_mass=wet_mass,
         tank_vol=vol
     )
+
+@app.get("/")
+def root():
+	return{"status": "OK", "message": "Thruster configurator backend is running"}
