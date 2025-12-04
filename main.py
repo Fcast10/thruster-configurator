@@ -2,7 +2,7 @@ from fastapi import FastAPI
 from pydantic import BaseModel
 import math
 
-app_web = FastAPI()
+app = FastAPI()
 
 class InputData(BaseModel):
     dry_mass: float
@@ -15,7 +15,7 @@ class OutputData(BaseModel):
     wet_mass: float
     tank_vol: float
 
-@app_web.post("/calculate", response_model=OutputData)
+@app.post("/calculate", response_model=OutputData)
 def calculate(data: InputData):
     g0 = 9.80665
 
