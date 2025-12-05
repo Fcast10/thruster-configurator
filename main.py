@@ -15,6 +15,14 @@ class OutputData(BaseModel):
     wet_mass: float
     tank_vol: float
 
+# Endpoint di test #
+
+@app.get("/")
+def root():
+	return{"message":"Thruster configurator API is running"}
+
+# Calcolo principale #
+
 @app.post("/calculate", response_model=OutputData)
 def calculate(data: InputData):
     g0 = 9.80665
@@ -30,6 +38,3 @@ def calculate(data: InputData):
         tank_vol=vol
     )
 
-@app.get("/")
-def root():
-	return{"status": "OK", "message": "Thruster configurator backend is running"}
