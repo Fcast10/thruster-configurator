@@ -16,7 +16,7 @@ app.add_middleware(
 
 class InputData(BaseModel):
     dry_mass: float         # [kg]
-    delta_v: float          # [s]
+    delta_v: float          # [m/s]
 
 class OutputData(BaseModel):
     propellant_mass: float  # [kg]
@@ -46,7 +46,7 @@ def calculate(data: InputData):
 
     mass_ratio = math.exp(data.delta_v / (isp * g0))  # dimensionless
     prop_mass = data.dry_mass * (mass_ratio - 1)      # [kg]
-    wet_mass = data.dry_mass + prop_mass              # [kg]
+    wet_mass = data.dry_mass + prop_mass              # [kg] (da implementare con peso del thruster)
     total_vol = prop_mass / rho_g                     # [m^3]
     total_vol = total_vol*1e9                         # [mm^3]
     cross_area = math.pi*(radius)**2                  # [mm^2]
@@ -63,4 +63,5 @@ def calculate(data: InputData):
         wet_mass=wet_mass,
         height_cyl=H_cylinder
     )
+
 
