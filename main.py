@@ -20,7 +20,7 @@ class InputData(BaseModel):
 
 class OutputData(BaseModel):
     propellant_mass: float  # [kg]
-    wet_mass: float         # [kg]
+    total_mass: float         # [kg]
     height_cyl: float       # [mm]
 
 # Endpoint di test #
