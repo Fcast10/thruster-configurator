@@ -55,17 +55,17 @@ def calculate(data: InputData):
     dome_vol = 2/3*math.pi*(radius)**2*H_dome         # [mm^3]
     cyl_vol = total_vol - 2*dome_vol                  # [mm^3]
 
+    if cyl_vol < 0:
+         H_cylinder = 0
+    else:
+        H_cylinder = cyl_vol/cross_area    # [mm]
+
     # Preliminary tank sizing, approx: tank geometry, thin walls
 
     e = math.sqrt(1-(H_dome**2/radius**2))
     A_int = 2*math.pi*radius*H_cylinder + 2*math.pi*radius**2*(1+(1-e**2)/e*math.atanh(e))  # [mm^2])
     tank_mass = rho_al*thick_tank*A_int*1e-9  # [kg]
     total_mass = data.dry_mass + total_dry_prop_mass + tank_mass + prop_mass 
-    
-    if cyl_vol < 0:
-         H_cylinder = 0
-    else:
-        H_cylinder = cyl_vol/cross_area    # [mm]
 
     return OutputData(
         propellant_mass=prop_mass,
