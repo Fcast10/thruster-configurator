@@ -65,11 +65,11 @@ def calculate(data: InputData):
     e = math.sqrt(1-(H_dome**2/radius**2))
     A_int = 2*math.pi*radius*H_cylinder + 2*math.pi*radius**2*(1+(1-e**2)/e*math.atanh(e))  # [mm^2])
     tank_mass = rho_al*thick_tank*A_int*1e-9  # [kg]
-    total_mass = data.dry_mass + total_dry_prop_mass + tank_mass + prop_mass 
+    tot_mass = data.dry_mass + total_dry_prop_mass + tank_mass + prop_mass 
 
     return OutputData(
         propellant_mass=prop_mass,
-        tot_mass=total_mass,
+        total_mass=tot_mass,
         height_cyl=H_cylinder
     )
 
