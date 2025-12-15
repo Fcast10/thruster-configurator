@@ -42,17 +42,26 @@ def calculate(data: InputData):
     diameter = 94.2       # [mm]
     radius = diameter/2   # [mm]
     H_dome = 17           # [mm]
+    total_dry_prop_mass = 1.457 # [kg]
+    rho_al = 2810         # [kg/m^3]
+    thick_tank = 1        # [mm]
 
 
     mass_ratio = math.exp(data.delta_v / (isp * g0))  # dimensionless
-    prop_mass = data.dry_mass * (mass_ratio - 1)      # [kg]
-    wet_mass = data.dry_mass + prop_mass              # [kg] (da implementare con peso del thruster)
+    prop_mass = data.dry_mass * (mass_ratio - 1)      # [kg], massa propellente
     total_vol = prop_mass / rho_g                     # [m^3]
     total_vol = total_vol*1e9                         # [mm^3]
     cross_area = math.pi*(radius)**2                  # [mm^2]
     dome_vol = 2/3*math.pi*(radius)**2*H_dome         # [mm^3]
     cyl_vol = total_vol - 2*dome_vol                  # [mm^3]
 
+    # Preliminary tank sizing, approx: tank geometry, thin walls
+
+    e = math.sqrt(1-(radius**2/H_dome**2))
+    A_int = 2*math.pi*radius*H_cylinder + 2*(math.pi*radius**2*(1+H_dome/(radius*e)*math.asin(e)))  # [mm^2])
+    tank_mass = rho_al*thick_tank*A_int*1e-9  # [kg]
+    total_mass = data.dry_mass + total_dry_prop_mass + tank_mass + prop_mass 
+    
     if cyl_vol < 0:
          H_cylinder = 0
     else:
@@ -60,7 +69,7 @@ def calculate(data: InputData):
 
     return OutputData(
         propellant_mass=prop_mass,
-        wet_mass=wet_mass,
+        tot_mass=total_mass,
         height_cyl=H_cylinder
     )
 
