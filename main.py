@@ -37,7 +37,7 @@ def calculate(data: InputData):
     # Fixed Data
 
     g0 = 9.80665                  # [m/s^2]
-    isp = 80                      # [s]
+    isp = 180                     # [s]
     rho_g = 1000                  # [kg/m^3]
     diameter = 94.2               # [mm]
     radius = diameter/2           # [mm]
