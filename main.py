@@ -1,5 +1,7 @@
 from fastapi import FastAPI
+from fastapi import HTTPException
 from fastapi.middleware.cors import CORSMiddleware
+from typing import Optional
 from pydantic import BaseModel
 import math
 
@@ -13,10 +15,10 @@ app.add_middleware(
     allow_headers=["*"], 
 )
 
-
 class InputData(BaseModel):
-    dry_mass: float         # [kg]
-    delta_v: float          # [m/s]
+    dry_mass: float                     # [kg]
+    delta_v: Optional[float] = None     # [m/s]
+    I_tot: Optional[float] = None       # [Ns]
 
 class OutputData(BaseModel):
     propellant_mass: float  # [kg]
@@ -34,6 +36,23 @@ def root():
 @app.post("/calculate", response_model=OutputData)
 def calculate(data: InputData):
 
+    # Input data
+
+    dry_mass = data.dry_mass
+    delta_v = data.delta_v
+    I_tot = data.I_tot
+
+    if delta_v is None and I_tot is None:
+        raise HTTPException(
+             status_code = 400,
+             detail = "Devi fornire almeno deltaV o impulso totale"
+        )
+    if delta_v is not None and I_tot is not None:
+         raise HTTPException(
+              status_code = 400,
+              detail = "Devi fornire solo uno tra deltaV e impulso totale"
+         )
+    
     # Fixed Data
 
     g0 = 9.80665                  # [m/s^2]
@@ -46,10 +65,13 @@ def calculate(data: InputData):
     rho_al = 2810                 # [kg/m^3]
     thick_tank = 1                # [mm], better estimate(?)
  
-
-    mass_ratio = math.exp(data.delta_v / (isp * g0))   # dimensionless
-    m_f = data.dry_mass + total_dry_prop_mass          # [kg]
-    prop_mass = m_f * (mass_ratio - 1)                 # [kg]
+    if delta_v is not None:
+        mass_ratio = math.exp(delta_v / (isp * g0))   # dimensionless
+        m_f = dry_mass + total_dry_prop_mass          # [kg]
+        prop_mass = m_f * (mass_ratio - 1)            # [kg]
+    else: 
+         prop_mass = I_tot/(g0*isp)
+    
     total_vol = prop_mass / rho_g                      # [m^3]
     total_vol = total_vol*1e9                          # [mm^3]
     cross_area = math.pi*(radius)**2                   # [mm^2]
@@ -73,5 +95,3 @@ def calculate(data: InputData):
         total_mass=tot_mass,
         height_cyl=H_cylinder
     )
-
-
