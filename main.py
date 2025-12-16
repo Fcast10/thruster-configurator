@@ -44,13 +44,13 @@ def calculate(data: InputData):
 
     if delta_v is None and I_tot is None:
         raise HTTPException(
-             status_code = 400,
-             detail = "Devi fornire almeno deltaV o impulso totale"
+            status_code = 400,
+            detail = "Devi fornire almeno deltaV o impulso totale"
         )
     if delta_v is not None and I_tot is not None:
-         raise HTTPException(
-              status_code = 400,
-              detail = "Devi fornire solo uno tra deltaV e impulso totale"
+        raise HTTPException(
+            status_code = 400,
+            detail = "Devi fornire solo uno tra deltaV e impulso totale"
          )
     
     # Fixed Data
@@ -69,8 +69,9 @@ def calculate(data: InputData):
         mass_ratio = math.exp(delta_v / (isp * g0))   # dimensionless
         m_f = dry_mass + total_dry_prop_mass          # [kg]
         prop_mass = m_f * (mass_ratio - 1)            # [kg]
-    else: 
-         prop_mass = I_tot/(g0*isp)
+    elif I_tot is not None:
+        prop_mass = I_tot/(g0*isp)
+        m_f = dry_mass + total_dry_prop_mass 
     
     total_vol = prop_mass / rho_g                      # [m^3]
     total_vol = total_vol*1e9                          # [mm^3]
