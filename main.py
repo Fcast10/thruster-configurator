@@ -29,6 +29,7 @@ class OutputData(BaseModel):
     propellant_mass: float  # [kg]
     total_mass: float         # [kg]
     height_cyl: float       # [mm]
+    number_of_tanks: int 
     
 # Endpoint di test #
 
@@ -129,4 +130,5 @@ def calculate(data: InputData):
         propellant_mass=prop_mass,
         total_mass=tot_mass,
         height_cyl=H_cylinder,
+        number_of_tanks=nm_tanks,
     )
