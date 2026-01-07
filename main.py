@@ -72,7 +72,7 @@ def calculate(data: InputData):
     total_dry_prop_mass = 1.457   # [kg]
     rho_al = 2810                 # [kg/m^3]
     thick_tank = 1                # [mm], better estimate(?)
-    max_height = 227              # [mm]
+    max_height = 200              # [mm]
  
     if delta_v is not None:
         mass_ratio = math.exp(delta_v / (isp * g0))     # dimensionless
