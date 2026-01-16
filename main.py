@@ -24,7 +24,7 @@ class InputData(BaseModel):
     dry_mass: float                     # [kg]
     delta_v: Optional[float] = None     # [m/s]
     I_tot: Optional[float] = None       # [Ns]
-    P_user: Optional[float] = None      # [W]
+    P_user: float      # [W]
     CS_standard: bool = False
 
 class OutputData(BaseModel):
@@ -77,16 +77,15 @@ def calculate(data: InputData):
     thick_tank = 1                # [mm], better estimate(?)
     max_height = 200              # [mm]
 
+    # Linear interpolation Isp w/ Power
     P1, isp1 = 35, 120
     P2, isp2 = 50, 180
-
     m = (isp2 - isp1)/(P2 - P1)
     q = isp1 - m*P1
 
-    if P_user is not None:
-        isp_user = m*P_user + q
-        isp = isp_user
-  
+    isp_user = m*P_user + q
+    isp = isp_user
+
     if delta_v is not None:
         mass_ratio = math.exp(delta_v / (isp * g0))     # dimensionless
         m_f = dry_mass + total_dry_prop_mass            # [kg]
@@ -114,7 +113,6 @@ def calculate(data: InputData):
     # A_int = 2*math.pi*radius*H_cylinder + 2*math.pi*radius**2*(1+(1-e**2)/e*math.atanh(e))  # [mm^2]
 
     # CubeSat constraints
-
     nm_tanks = 1
     vol_per_tank = total_vol/nm_tanks
 
