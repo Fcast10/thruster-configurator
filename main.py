@@ -4,6 +4,7 @@ from fastapi.middleware.cors import CORSMiddleware
 from typing import Optional
 from pydantic import BaseModel
 import math
+import numpy as np
 
 app = FastAPI()
 
@@ -23,6 +24,7 @@ class InputData(BaseModel):
     dry_mass: float                     # [kg]
     delta_v: Optional[float] = None     # [m/s]
     I_tot: Optional[float] = None       # [Ns]
+    P_user: Optional[float] = None      # [W]
     CS_standard: bool = False
 
 class OutputData(BaseModel):
@@ -47,6 +49,7 @@ def calculate(data: InputData):
     dry_mass = data.dry_mass
     delta_v = data.delta_v
     I_tot = data.I_tot
+    P_user = data.P_user
     CS = data.CS_standard
 
     if delta_v is None and I_tot is None:
@@ -73,7 +76,17 @@ def calculate(data: InputData):
     rho_al = 2810                 # [kg/m^3]
     thick_tank = 1                # [mm], better estimate(?)
     max_height = 200              # [mm]
- 
+
+    P1, isp1 = 35, 120
+    P2, isp2 = 50, 180
+
+    m = (isp2 - isp1)/(P2 - P1)
+    q = isp1 - m*P1
+
+    if P_user is not None:
+        isp_user = m*P_user + q
+        isp = isp_user
+  
     if delta_v is not None:
         mass_ratio = math.exp(delta_v / (isp * g0))     # dimensionless
         m_f = dry_mass + total_dry_prop_mass            # [kg]
@@ -98,7 +111,7 @@ def calculate(data: InputData):
     # Preliminary tank sizing, approx: tank geometry, thin walls
 
     e = math.sqrt(1-(H_dome**2/radius**2))
-    #  A_int = 2*math.pi*radius*H_cylinder + 2*math.pi*radius**2*(1+(1-e**2)/e*math.atanh(e))  # [mm^2]
+    # A_int = 2*math.pi*radius*H_cylinder + 2*math.pi*radius**2*(1+(1-e**2)/e*math.atanh(e))  # [mm^2]
 
     # CubeSat constraints
 
