@@ -143,7 +143,7 @@ def calculate(data: InputData):
     
     return OutputData(
         propellant_mass=prop_mass,
-        propellant_volume=total_vol*1e3,  # [l]
+        propellant_volume=total_vol*1e-6,  # [l]
         total_mass=tot_mass,
         tot_height=tot_height,
         height_cyl=H_cylinder,
