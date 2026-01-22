@@ -32,6 +32,7 @@ class OutputData(BaseModel):
     propellant_mass: float    # [kg]
     propellant_volume: float  # [m^3]
     total_mass: float         # [kg]
+    tot_height: float
     height_cyl: float         # [mm]
     number_of_tanks: int 
     
