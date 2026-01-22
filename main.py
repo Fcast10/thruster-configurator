@@ -142,6 +142,7 @@ def calculate(data: InputData):
         propellant_mass=prop_mass,
         propellant_volume=total_vol*1e3,  # [l]
         total_mass=tot_mass,
+        tot_height=tot_height_per_tank,
         height_cyl=H_cylinder,
         number_of_tanks=nm_tanks,
     )
