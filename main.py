@@ -10,12 +10,12 @@ app = FastAPI()
 
 app.add_middleware( 
     CORSMiddleware, 
-    #allow_origins=[
-    #"https://ohm.space",  # dominio del sito web
-    #"https://www.ohm.space",
-    #"http://localhost",   # per test in locale
-    #],
-    allow_origins=["*"],
+    allow_origins=[
+    "https://ohm.space",  # dominio del sito web
+    "https://www.ohm.space",
+    "http://localhost",   # per test in locale
+    ],
+    #allow_origins=["*"],
     allow_credentials=True,
     allow_methods=["*"],
     allow_headers=["*"], 
