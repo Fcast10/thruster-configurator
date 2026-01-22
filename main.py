@@ -131,6 +131,7 @@ def calculate(data: InputData):
             H_cylinder = H_per_cyl
 
         tot_height_per_tank = H_cylinder + 2*H_dome + 2*thick_tank   # [mm]
+        tot_height = tot_height_per_tank
 
         if tot_height_per_tank > max_height:
             raise HTTPException(status_code=422, detail="La capacità richiesta supera il limite di altezza anche con 2 tank.")
@@ -144,7 +145,7 @@ def calculate(data: InputData):
         propellant_mass=prop_mass,
         propellant_volume=total_vol*1e3,  # [l]
         total_mass=tot_mass,
-        tot_height=tot_height_per_tank,
+        tot_height=tot_height,
         height_cyl=H_cylinder,
         number_of_tanks=nm_tanks,
     )
