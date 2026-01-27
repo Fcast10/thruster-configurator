@@ -32,7 +32,7 @@ class OutputData(BaseModel):
     propellant_mass: float    # [kg]
     propellant_volume: float  # [m^3]
     total_mass: float         # [kg]
-    tot_height: float
+    tot_height1: float
     height_cyl1: float         # [mm]
     height_cyl2: Optional[float] = None
     tot_height2: Optional[float] = None
@@ -122,7 +122,7 @@ def calculate(data: InputData):
     tot_height2 = None
    
     # CUBESAT CONSTRAINTS
-    
+
     nm_tanks = 1
     # vol_per_tank = total_vol/nm_tanks
     
